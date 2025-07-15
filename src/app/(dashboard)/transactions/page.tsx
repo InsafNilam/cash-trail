@@ -25,7 +25,6 @@ function TransactionsPage() {
           <DateRangePicker
             initialDateFrom={dateRange.from}
             initialDateTo={dateRange.to}
-            showCompare={false}
             onUpdate={({ range }) => {
               const { from, to } = range;
               if (!from || !to) return;

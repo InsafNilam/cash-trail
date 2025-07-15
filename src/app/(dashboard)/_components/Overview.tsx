@@ -24,17 +24,16 @@ function Overview({ userSettings }: Props) {
           <DateRangePicker
             initialDateFrom={dateRange.from}
             initialDateTo={dateRange.to}
-            showCompare={false}
             onUpdate={(values) => {
-              const { from, to } = values.range;
-              if (!from || !to) return;
+              const { from, to } = values.range
+              if (!from || !to) return
 
               if (differenceInDays(to, from) > MAX_DATE_RANGE) {
-                toast.error(`The selected date range is too big. Max allowed range is ${MAX_DATE_RANGE} days.`);
-                return;
+                toast.error(`The selected date range is too big. Max allowed range is ${MAX_DATE_RANGE} days.`)
+                return
               }
 
-              setDateRange({ from, to });
+              setDateRange({ from, to })
             }}
           />
         </div>
