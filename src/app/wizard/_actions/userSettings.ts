@@ -2,7 +2,7 @@
 
 import { UserSettings } from "@/generated/prisma";
 import { prisma } from "@/lib/prisma";
-import { UpdateUserCurrencySchema } from "@/schema/userSettings";
+import { UpdateUserCurrencySchema } from "@/schema/userSetting";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
