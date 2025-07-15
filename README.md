@@ -26,56 +26,56 @@
 
 ### Prisma Schema Highlights
 
-\`\`\`prisma
+```prisma
 model UserSettings {
-userId String @id
-currency String
+  userId   String @id
+  currency String
 }
 
 model Category {
-name String
-userId String
-icon String
-type String @default("income")
-createdAt DateTime @default(now())
+  name      String
+  userId    String
+  icon      String
+  type      String @default("income")
+  createdAt DateTime @default(now())
 
-@@unique([name, userId, type])
+  @@unique([name, userId, type])
 }
 
 model Transaction {
-id String @id @default(uuid())
-createdAt DateTime @default(now())
-updatedAt DateTime @default(now())
-amount Float
-description String
-date DateTime
-userId String
-type String @default("income")
-category String
-categoryIcon String
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now())
+  amount       Float
+  description  String
+  date         DateTime
+  userId       String
+  type         String   @default("income")
+  category     String
+  categoryIcon String
 }
 
 model MonthHistory {
-userId String
-day Int
-month Int
-year Int
-income Float
-expense Float
+  userId  String
+  day     Int
+  month   Int
+  year    Int
+  income  Float
+  expense Float
 
-@@id([day, month, year, userId])
+  @@id([day, month, year, userId])
 }
 
 model YearHistory {
-userId String
-month Int
-year Int
-income Float
-expense Float
+  userId  String
+  month   Int
+  year    Int
+  income  Float
+  expense Float
 
-@@id([month, year, userId])
+  @@id([month, year, userId])
 }
-\`\`\`
+```
 
 > **Note**: User accounts are handled by **Clerk**.
 
@@ -85,13 +85,13 @@ expense Float
 
 When a transaction is created, updated, or deleted, aggregate tables (`MonthHistory`, `YearHistory`) are updated in the same transaction to keep monthly/yearly summaries in sync:
 
-\`\`\`ts
+```ts
 await prisma.$transaction([
-// Respective Database Operation for transaction management
-prisma.monthHistory.upsert(...),
-prisma.yearHistory.upsert(...),
+  // Respective Database Operation for transaction management
+  prisma.monthHistory.upsert(...),
+  prisma.yearHistory.upsert(...),
 ]);
-\`\`\`
+```
 
 This approach is **type-safe** and **consistent**, though it may require optimization as data volume increases.
 
@@ -99,25 +99,25 @@ This approach is **type-safe** and **consistent**, though it may require optimiz
 
 ## 🛠 Local Development
 
-### Prisma Setup
-
-\`\`\`bash
-npx prisma init # Initialize Prisma
-npx prisma migrate dev --name init # Apply migrations
-npx prisma generate # Generate Prisma client
-npx prisma studio # Optional: Visual schema explorer
-\`\`\`
-
 ### SQLite for Dev
 
-In \`schema.prisma\`:
+In `schema.prisma`:
 
-\`\`\`prisma
+```prisma
 datasource db {
-provider = "sqlite"
-url = "file:./dev.db"
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
-\`\`\`
+```
+
+### Prisma Setup
+
+```bash
+npx prisma init                    # Initialize Prisma
+npx prisma migrate dev --name init # Apply migrations
+npx prisma generate                # Generate Prisma client
+npx prisma studio                  # Optional: Visual schema explorer
+```
 
 ---
 
@@ -127,13 +127,13 @@ url = "file:./dev.db"
 
 Switch to PostgreSQL:
 
-\`\`\`prisma
+```prisma
 datasource db {
-provider = "postgresql"
-url = env("POSTGRES_PRISMA_URL")
-directUrl = env("POSTGRES_URL_NON_POOLING")
+  provider = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
-\`\`\`
+```
 
 ### Step 2: Vercel Setup
 
@@ -145,28 +145,25 @@ directUrl = env("POSTGRES_URL_NON_POOLING")
 
 If switching from SQLite to Postgres:
 
-\`\`\`bash
-
+```bash
 # Optional cleanup
-
 rm -rf prisma/migrations
 rm prisma/dev.db
 
 # Recreate initial migration
-
 prisma migrate dev --name init
-\`\`\`
+```
 
 ### Step 4: Add Prisma postinstall Hook
 
-\`\`\`json
+```json
 // package.json
 {
-"scripts": {
-"postinstall": "prisma generate"
+  "scripts": {
+    "postinstall": "prisma generate"
+  }
 }
-}
-\`\`\`
+```
 
 Once the above steps are completed, your application will be successfully deployed on Vercel and should function as expected.
 
@@ -176,20 +173,21 @@ Once the above steps are completed, your application will be successfully deploy
 
 Create a \`.env.local\` for development (PostgreSQL database \`.env.local\`) and make sure it includes the correct database connection string:
 
-\`\`\`env
+```env
 POSTGRES_PRISMA_URL="postgresql://..."
 POSTGRES_URL_NON_POOLING="postgresql://..."
-\`\`\`
+```
 
 ---
 
 ## 🧪 Useful Commands
 
-\`\`\`bash
-npx prisma db pull # Introspect DB
-npx prisma generate # Regenerate client
-npx prisma migrate dev # Run migrations in dev
-\`\`\`
+```bash
+npx prisma db pull         # Introspect DB
+npx prisma generate        # Regenerate client
+npx prisma migrate dev     # Run migrations in dev
+npm run dev                # Run development env
+```
 
 ---
 
