@@ -135,26 +135,7 @@ datasource db {
 }
 ```
 
-### Step 2: Vercel Setup
-
-1. Go to your [Vercel dashboard](https://vercel.com).
-2. In the **Storage** tab, create a **PostgreSQL** database.
-3. Copy the PostgreSQL environment variables from your Vercel dashboard and add them to both Vercel’s Environment Variables and the local .env file of your project to ensure proper configuration during deployment.
-
-### Step 3: Prepare Migrations
-
-If switching from SQLite to Postgres:
-
-```bash
-# Optional cleanup
-rm -rf prisma/migrations
-rm prisma/dev.db
-
-# Recreate initial migration
-prisma migrate dev --name init
-```
-
-### Step 4: Add Prisma postinstall Hook
+### Step 2: Add Prisma postinstall Hook
 
 ```json
 // package.json
@@ -163,6 +144,25 @@ prisma migrate dev --name init
     "postinstall": "prisma generate"
   }
 }
+```
+
+### Step 3: Vercel Setup
+
+1. After making the above changes, push your updates to the GitHub repository so Vercel can access and deploy the latest version of your application.
+2. Go to your [Vercel dashboard](https://vercel.com).
+3. In the **Storage** tab, create a **PostgreSQL** database.
+4. Create a new project in Vercel by connecting your GitHub repository and granting the necessary access.
+5. Copy the PostgreSQL environment variables from your Vercel dashboard and add them to both Vercel’s Project Environment Variables and the local .env file of your project to ensure proper configuration during deployment.
+
+### Step 4: Prepare Migrations
+
+```bash
+# Optional cleanup
+rm -rf prisma/migrations
+rm prisma/dev.db
+
+# Recreate initial migration
+prisma migrate dev --name init
 ```
 
 Once the above steps are completed, your application will be successfully deployed on Vercel and should function as expected.
